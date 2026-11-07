@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.env
+# CSS generado por Tailwind (se compila en el Dockerfile o con el comando del README)
+app/static/css/app.css
+/tailwindcss

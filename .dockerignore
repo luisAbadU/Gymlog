@@ -1,0 +1,11 @@
+.git
+.github
+.kiro
+.venv
+.env
+**/__pycache__
+.pytest_cache
+.ruff_cache
+tests
+tailwindcss
+app/static/css/app.css

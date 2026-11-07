@@ -1,0 +1,4 @@
+@import "tailwindcss";
+
+/* Tailwind solo genera las clases que encuentra en las plantillas. */
+@source "../../templates";
