@@ -96,6 +96,13 @@ Abre también <http://localhost:8000> en el navegador: debe aparecer la página 
 
 ### c. Pruebas y calidad
 
+Las pruebas se conectan a la base de datos, así que primero asegúrate de que el servicio `db`
+esté arriba:
+
+```powershell
+docker compose up -d db
+```
+
 ```powershell
 uv sync                     # instala dependencias (crea el entorno .venv)
 .\scripts\test.ps1          # corre las pruebas (pytest) contra gymlog_test
@@ -132,10 +139,13 @@ powershell -ExecutionPolicy Bypass -File scripts\test.ps1
 ### d. Desarrollo sin Docker para la app
 
 Puedes dejar solo la base de datos en Docker y correr la app directamente con uv, que recarga al
-guardar:
+guardar. Si antes levantaste todo con `docker compose up -d`, el contenedor de la app ya está
+ocupando el puerto 8000, así que primero detenlo (`docker compose stop app`) para que uvicorn
+pueda usar ese puerto:
 
 ```powershell
 docker compose up -d db
+docker compose stop app
 uv run uvicorn app.main:app --reload
 ```
 
@@ -172,7 +182,7 @@ renómbralo a `tailwindcss.exe` en la raíz del proyecto y déjalo compilando el
 | `uv : El término 'uv' no se reconoce …` | uv no está instalado, o instalaste uv sin reabrir PowerShell. | Instala uv (ver Requisitos) y abre una nueva ventana de PowerShell. |
 | `password authentication failed for user "gymlog"` al correr las pruebas | La contraseña que usaste no coincide con la del `.env` (o la base se creó con otra). | Corre las pruebas con `.\scripts\test.ps1`, que toma la contraseña del `.env`. Si la cambiaste después de crear el volumen, recréalo con `docker compose down -v`. |
 | El puerto 5432 está ocupado / `bind: address already in use` | Hay un PostgreSQL instalado en Windows ocupando el puerto. | Revisa con `Get-Service *postgres*` y detén el servicio, o cambia el puerto publicado. |
-| El script de inicio de PostgreSQL falla con un error que menciona `\r` | Los `.sh` quedaron con finales de línea CRLF (Windows). | Clona el repo de nuevo: `.gitattributes` fuerza finales de línea LF para los scripts en clones nuevos. |
+| El script de inicio de PostgreSQL falla con un error que menciona `\r` | Los `.sh` quedaron con finales de línea CRLF (Windows). | Clona el repo de nuevo: `.gitattributes` fuerza finales de línea LF para los scripts en clones nuevos. Como ese script de inicio solo corre la primera vez que arranca el volumen, recréalo con `docker compose down -v` (borra los datos) y vuelve a levantar. |
 | Archivos «bloqueados», errores de permisos o Git muy lento | OneDrive está sincronizando la carpeta del proyecto. | Mueve el proyecto fuera de OneDrive o excluye esa carpeta de la sincronización. |
 
 ## Migraciones

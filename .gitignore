@@ -7,3 +7,4 @@ __pycache__/
 # CSS generado por Tailwind (se compila en el Dockerfile o con el comando del README)
 app/static/css/app.css
 /tailwindcss
+/tailwindcss.exe
